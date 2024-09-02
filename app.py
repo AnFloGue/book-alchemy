@@ -1,4 +1,7 @@
+from datetime import datetime
 import os
+from sqlite3 import IntegrityError
+
 from flask import Flask, render_template, request, redirect, url_for, flash
 from data_models import db, Author, Book
 
@@ -39,7 +42,7 @@ def add_author():
         db.session.add(new_author)
         db.session.commit()
         flash('Author added successfully!')
-        return redirect(url_for('home'))
+        return redirect(url_for('add_author'))
     return render_template('add_author.html')
 
 @app.route('/add_book', methods=['GET', 'POST'])
@@ -49,11 +52,23 @@ def add_book():
         title = request.form['title']
         publication_year = request.form['publication_year']
         author_id = request.form['author_id']
+
+        # Check if the book with the given ISBN already exists
+        existing_book = Book.query.filter_by(isbn=isbn).first()
+        if existing_book:
+            flash('Book with this ISBN already exists')
+            return redirect(url_for('add_book'))
+
         new_book = Book(isbn=isbn, title=title, publication_year=publication_year, author_id=author_id)
         db.session.add(new_book)
-        db.session.commit()
-        flash('Book added successfully!')
+        try:
+            db.session.commit()
+            flash('Book added successfully!')
+        except IntegrityError:
+            db.session.rollback()
+            flash('An error occurred while adding the book')
         return redirect(url_for('home'))
+
     authors = Author.query.all()
     return render_template('add_book.html', authors=authors)
 
