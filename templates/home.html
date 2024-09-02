@@ -6,17 +6,26 @@
 </head>
 <body>
     <h1>Library</h1>
+
+    <!-- Keyword Search Form -->
     <form method="GET" action="{{ url_for('home') }}">
         <input type="text" name="search" placeholder="Search for a book">
         <button type="submit">Search</button>
     </form>
+
+    <!-- Sorting Buttons -->
     <button onclick="window.location.href='{{ url_for('home', sort_by='title') }}'">Sort by Title</button>
     <button onclick="window.location.href='{{ url_for('home', sort_by='author') }}'">Sort by Author</button>
+
+    <!-- Add Author and Add Book Buttons -->
     <button onclick="window.location.href='{{ url_for('add_author') }}'">Add Author</button>
     <button onclick="window.location.href='{{ url_for('add_book') }}'">Add Book</button>
+
+    <!-- Display Books -->
     <ul>
         {% for book in books %}
             <li>
+                <img src="{{ book.cover_image_url }}" alt="Cover of {{ book.title }}" width="100">
                 {{ book.title }} by {{ book.author.name }}
                 <form action="{{ url_for('delete_book', book_id=book.id) }}" method="POST">
                     <button type="submit">Delete</button>

@@ -25,9 +25,9 @@ def home():
         books_query = books_query.join(Author).order_by(Author.name)
 
     books = books_query.all()
+    for book in books:
+        book.cover_image_url = f'https://covers.openlibrary.org/b/isbn/{book.isbn}-L.jpg'
     return render_template('home.html', books=books)
-
-from datetime import datetime
 
 @app.route('/add_author', methods=['GET', 'POST'])
 def add_author():
