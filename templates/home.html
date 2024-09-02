@@ -6,9 +6,19 @@
 </head>
 <body>
     <h1>Library</h1>
+    <form method="GET" action="{{ url_for('home') }}">
+        <input type="text" name="search" placeholder="Search for a book">
+        <button type="submit">Search</button>
+    </form>
+    <button onclick="window.location.href='{{ url_for('home', sort_by='title') }}'">Sort by Title</button>
+    <button onclick="window.location.href='{{ url_for('home', sort_by='author') }}'">Sort by Author</button>
+    <button onclick="window.location.href='{{ url_for('add_author') }}'">Add Author</button>
+    <button onclick="window.location.href='{{ url_for('add_book') }}'">Add Book</button>
     <ul>
         {% for book in books %}
-            <li>{{ book.title }} by {{ book.author.name }}
+            <li>
+                <img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg" alt="Cover Image">
+                {{ book.title }} by {{ book.author.name }}
                 <form action="{{ url_for('delete_book', book_id=book.id) }}" method="POST">
                     <button type="submit">Delete</button>
                 </form>

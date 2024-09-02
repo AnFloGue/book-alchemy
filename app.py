@@ -12,7 +12,19 @@ db.init_app(app)
 
 @app.route('/')
 def home():
-    books = Book.query.all()
+    search_query = request.args.get('search')
+    sort_by = request.args.get('sort_by')
+    books_query = Book.query
+
+    if search_query:
+        books_query = books_query.filter(Book.title.like(f'%{search_query}%'))
+
+    if sort_by == 'title':
+        books_query = books_query.order_by(Book.title)
+    elif sort_by == 'author':
+        books_query = books_query.join(Author).order_by(Author.name)
+
+    books = books_query.all()
     return render_template('home.html', books=books)
 
 from datetime import datetime
@@ -53,3 +65,8 @@ def delete_book(book_id):
         db.session.commit()
         flash('Book deleted successfully!')
     return redirect(url_for('home'))
+
+if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
+    app.run(debug=True)
