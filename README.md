@@ -27,3 +27,6 @@ python -m flask run
 - URL: /book/<int:book_id>/delete
 - Method: POST
 - Description: Deletes a book by its ID.
+
+### Search Book
+- URL: /?search=\<search_query\>
