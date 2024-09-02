@@ -39,7 +39,7 @@ def add_author():
         db.session.add(new_author)
         db.session.commit()
         flash('Author added successfully!')
-        return redirect(url_for('add_author'))
+        return redirect(url_for('home'))
     return render_template('add_author.html')
 
 @app.route('/add_book', methods=['GET', 'POST'])
@@ -53,7 +53,7 @@ def add_book():
         db.session.add(new_book)
         db.session.commit()
         flash('Book added successfully!')
-        return redirect(url_for('add_book'))
+        return redirect(url_for('home'))
     authors = Author.query.all()
     return render_template('add_book.html', authors=authors)
 
